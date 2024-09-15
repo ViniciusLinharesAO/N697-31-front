@@ -12,11 +12,22 @@
     <h1>Gerenciamento de Usuários</h1>
     <form id="user-form">
       <input type="hidden" id="user-id">
-      <input type="text" id="name" placeholder="Nome" required>
-      <input type="email" id="email" placeholder="Email" required>
-      <button type="submit" id="submit-btn">Adicionar Usuário</button>
+      <input type="text" id="user-name" placeholder="Nome" required>
+      <input type="email" id="user-email" placeholder="Email" required>
+      <button type="submit" id="user-submit-btn">Adicionar Usuário</button>
     </form>
     <div id="user-list"></div>
+  </div>
+
+  <div class="container">
+    <h1>Gerenciamento de Carros</h1>
+    <form id="car-form">
+      <input type="hidden" id="car-id" />
+      <input type="text" id="car-marca" placeholder="Marca" required />
+      <input type="text" id="car-modelo" placeholder="Modelo" required />
+      <button type="submit" id="car-submit-btn">Adicionar Carro</button>
+    </form>
+    <div id="car-list"></div>
   </div>
 
   <script src="app.js"></script>
