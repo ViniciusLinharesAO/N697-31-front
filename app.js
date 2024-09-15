@@ -1,6 +1,7 @@
 // URL base da API
 const USERS_API_URL = 'https://n69731back-5539dnq2.b4a.run/users';
 const CARS_API_URL = 'https://n69731back-5539dnq2.b4a.run/cars';
+const CATEGORIES_API_URL = 'https://n69731back-5539dnq2.b4a.run/categories';
 
 // Elementos do DOM
 const userForm = document.getElementById('user-form');
@@ -226,3 +227,112 @@ async function deleteCar(id) {
 
 // Carrega os carros ao iniciar a página
 fetchCars();
+
+
+
+//Categorias
+// Elementos do DOM
+const categoryForm = document.getElementById('category-form');
+const categoryList = document.getElementById('category-list');
+const categoryIdInput = document.getElementById('category-id');
+const categoryNameInput = document.getElementById('category-name');
+const categorySubmitButton = document.getElementById('category-submit-btn');
+
+// Função para buscar e exibir as categorias
+async function fetchCategories() {
+  try {
+    const response = await fetch(CATEGORIES_API_URL);
+    const categories = await response.json();
+    displayCategories(categories);
+  } catch (error) {
+    console.error('Erro ao buscar categorias:', error);
+  }
+}
+
+// Função para exibir as categorias na tela
+function displayCategories(categories) {
+  categoryList.innerHTML = ''; // Limpa a lista antes de exibir
+  categories.forEach((category) => {
+    const categoryDiv = document.createElement('div');
+    categoryDiv.className = 'category';
+    categoryDiv.innerHTML = `
+      <span>${category.name}</span>
+      <div>
+        <button class="edit" onclick="editCategory(${category.id}, '${category.name}')">Editar</button>
+        <button class="delete" onclick="deleteCategory(${category.id})">Deletar</button>
+      </div>
+    `;
+    categoryList.appendChild(categoryDiv);
+  });
+}
+
+// Função para adicionar ou atualizar uma categoria
+categoryForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const id = categoryIdInput.value;
+  const name = categoryNameInput.value;
+
+  if (id) {
+    // Atualiza a categoria existente
+    await updateCategory(id, name);
+  } else {
+    // Adiciona uma nova categoria
+    await addCategory(name);
+  }
+
+  categoryForm.reset();
+  categorySubmitButton.textContent = 'Adicionar Categoria';
+  fetchCategories();
+});
+
+// Função para adicionar uma categoria
+async function addCategory(name) {
+  try {
+    await fetch(CATEGORIES_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name }),
+    });
+  } catch (error) {
+    console.error('Erro ao adicionar categoria:', error);
+  }
+}
+
+// Função para editar uma categoria
+function editCategory(id, name) {
+  categoryIdInput.value = id;
+  categoryNameInput.value = name;
+  categorySubmitButton.textContent = 'Atualizar Categoria';
+}
+
+// Função para atualizar uma categoria
+async function updateCategory(id, name) {
+  try {
+    await fetch(`${CATEGORIES_API_URL}/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name }),
+    });
+  } catch (error) {
+    console.error('Erro ao atualizar categoria:', error);
+  }
+}
+
+// Função para deletar uma categoria
+async function deleteCategory(id) {
+  try {
+    await fetch(`${CATEGORIES_API_URL}/${id}`, {
+      method: 'DELETE',
+    });
+    fetchCategories();
+  } catch (error) {
+    console.error('Erro ao deletar categoria:', error);
+  }
+}
+
+// Carrega as categorias ao iniciar a página
+fetchCategories();
